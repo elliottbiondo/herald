@@ -1,6 +1,7 @@
 
-kws = set(["name", "gender", "mother", "father", "spouse",
-           "born", "birth_place", "died", "death_place", "buried" "married", "marriage_place", "place", "source", "notes", "tagline"])
+kws = set(["name", "gender", "mother", "father", "spouse", "born",
+           "birth_place", "died", "death_place", "buried" "married",
+           "marriage_place", "place", "source", "notes", "tagline"])
 
 class Person(object):
 
@@ -12,6 +13,7 @@ class Person(object):
        self.col = None
        self.birth_place = None
        self.death_place = None
+
        for key in kws:
            setattr(self, key, info[key] if key in info else None)
 
@@ -19,12 +21,16 @@ class Person(object):
        return "{0}\n{1}-{2}\n".format(self.name, self.birth, self.death)
 
 
-class Family(object):
-    def __init__(self, filename):
+class Family(dict):
+
+    def __init__(self):
         pass
 
+    def root():
+        return self._root
+
 def read_input(filename):
-    fam = {}
+    fam = Family()
     with open(filename, 'r') as f:
         line = f.readline()
         while line != "":
@@ -39,7 +45,6 @@ def read_input(filename):
         if person.father is not None:
             person.father = fam[person.father] if isinstance(person.father, basestring) \
                                                else person.father.name
-
     return fam
 
 

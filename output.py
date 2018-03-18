@@ -102,7 +102,6 @@ def write_output(fam, person, output_file):
 
     for ps in fam.itervalues():
         if ps.idx != '':
-            print ps.idx, ps.name, int(ps.idx, 2)
             ps.gen = len(ps.idx)
             ps.col = int(ps.idx, 2)
             subfam.append(ps)
