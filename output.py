@@ -1,11 +1,8 @@
-from os import system
-import numpy as np
-
 page_margin = 0.5
 box_height = 2.5
 box_width = 6.5
 box_margin = 0.2
-row_spacing = 7.
+row_spacing = 4.
 col_spacing = box_width + 1.5
 shift = 3
 
@@ -97,7 +94,7 @@ def assign(person, idx):
     if person.father is not None:
         assign(person.father, person.idx + '0')
 
-def write_output(fam, person):
+def write_output(fam, person, output_file):
     assign(person, '')
     person.gen = 0
     max_gen = 0
@@ -134,7 +131,5 @@ def write_output(fam, person):
 
     s += "</g>\n</svg>"
 
-    tempfile = "fam.svg"
-    with open(tempfile, 'w') as f:
+    with open("{}.svg".format(output_file), 'w') as f:
         f.write(s)
-    system("inkscape {0} --export-pdf {1}".format(tempfile, "fam.pdf"))
