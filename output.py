@@ -2,33 +2,32 @@ from os import system
 import numpy as np
 
 page_margin = 0.5
-
 box_height = 2.5
 box_width = 6.5
 box_margin = 0.2
-
 row_spacing = 7.
 col_spacing = box_width + 1.5
+shift = 3
 
-px_to_cm=35.43307
+PX_TO_CM = 35.43307
 
 def _birth_lines(person):
     line_style = '\t<path style="stroke:#000000;fill:none"\n'
     s = ''
 
     if person.mother or person.father:
-        child_x = person.child_x*px_to_cm
-        child_y = person.child_y*px_to_cm
+        child_x = person.child_x*PX_TO_CM
+        child_y = person.child_y*PX_TO_CM
         parent = person.mother if person.mother else person.father
-        parent_x = parent.parent_x*px_to_cm
-        parent_y = parent.parent_y*px_to_cm
+        parent_x = parent.parent_x*PX_TO_CM
+        parent_y = parent.parent_y*PX_TO_CM
         if parent.gender == "male":
-            mpx = parent_x + (col_spacing - box_width)/2.*px_to_cm
+            mpx = parent_x + (col_spacing - box_width)/2.*PX_TO_CM
         else:
-            mpx = parent_x - (col_spacing - box_width)/2.*px_to_cm
+            mpx = parent_x - (col_spacing - box_width)/2.*PX_TO_CM
         mpy = parent_y
         mpx2 = mpx
-        mpy2 = mpy + box_height/2.*px_to_cm
+        mpy2 = mpy + box_height/2.*PX_TO_CM
         s = line_style
         s += 'd="M {0:.5} {1} L {2} {3} L {4} {5}"/>\n'.format(
               child_x, child_y, mpx2, mpy2, mpx, mpy)
@@ -36,11 +35,13 @@ def _birth_lines(person):
     if person.mother:
         s += line_style
         s += 'd="M {0:.5} {1:.5} L {2:.5} {3:.5}"/>\n'.format(
-              mpx, mpy, person.mother.parent_x*px_to_cm, person.mother.parent_y*px_to_cm)
+              mpx, mpy, person.mother.parent_x*PX_TO_CM - shift,
+              person.mother.parent_y*PX_TO_CM)
     if person.father:
         s += line_style
         s += 'd="M {0:.5} {1:.5} L {2:.5} {3:.5}"/>\n'.format(
-              mpx, mpy, person.father.parent_x*px_to_cm, person.father.parent_y*px_to_cm)
+              mpx, mpy, person.father.parent_x*PX_TO_CM - shift,
+              person.father.parent_y*PX_TO_CM)
     return s
 
 def _person_text(person, width, height, people_per_gen, gen_ranks):
@@ -48,7 +49,8 @@ def _person_text(person, width, height, people_per_gen, gen_ranks):
     x = width/2. - people_per_gen[person.gen]*col_spacing/2. \
                  + gen_ranks[person.gen].index(person.col)*col_spacing \
                  + (col_spacing - box_width)/2.0
-    y = height - person.gen*row_spacing - page_margin - box_height/2. - (row_spacing - box_height)/2.0
+    y = height - person.gen*row_spacing - page_margin - box_height/2. \
+        - (row_spacing - box_height)/2.0
     person.x = x
     person.y = y
     person.child_x = x + box_width/2.
